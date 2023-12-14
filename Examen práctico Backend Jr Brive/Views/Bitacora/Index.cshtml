@@ -1,0 +1,58 @@
+﻿@model ML.Bitacora
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var UserID = Context.Session.GetString("UserID");
+}
+<link rel="stylesheet" href=" https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<script src=" https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+<div class="text-center">
+    <h2>Productos</h2>
+    <h5>Lista de Productos</h5>
+</div>
+<hr />
+
+<a href="@Url.Action("Form","Bitacora")" class="btn btn-success">Agregar </a>
+@if (Model.Bitacoras.Count > 0)
+{
+    <table class="table table-bordered">
+        <thead>
+            <!-- On rows -->
+            <tr class="bg-warning">
+                <th>Editar</th>
+                <th>IdProductos</th>
+                <th>Nombre</th>
+                <th>SDK</th>
+                <th>IdSucursal</th>
+                <th>Nombre Sucursal</th>
+                <th>Direccion</th>
+                <th>Telefono</th>
+                <th>Eliminar</th>
+                <!-- On cells (`td` or `th`) -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ML.Bitacora bitacora in Model.Bitacoras)
+            {
+                <tr>
+                    <td><a class="btn btn-warning" href="@Url.Action("Form", "Bitacora", new { IdProducto = bitacora.Producto.IdProducto })"><i class="fa-solid fa-pencil fa-bounce" style="color: #332774;"></i></a></td>
+                    <td>@bitacora.Producto.IdProducto</td>
+                    <td>@bitacora.Producto.Nombre</td>
+                    <td>@bitacora.Producto.SDK</td>
+                    <td>@bitacora.Producto.Sucursal.IdSucursal</td>
+                    <th>@bitacora.Producto.Sucursal.Nombre</th>
+                    <td>@bitacora.Producto.Sucursal.Direccion</td>
+                    <td>@bitacora.Producto.Sucursal.Telefono</td>
+
+                    <td><a class="btn btn-danger" href="@Url.Action("Delete", "Bitacora", new { IdProducto = bitacora.Producto.IdProducto })" onclick="return confirm('Estas seguro de que quieres eliminar este registro');"> <i class="fa-solid fa-trash fa-beat" style="color: black;"></i></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        No existen registros en la tabla :(
+    </div>
+}

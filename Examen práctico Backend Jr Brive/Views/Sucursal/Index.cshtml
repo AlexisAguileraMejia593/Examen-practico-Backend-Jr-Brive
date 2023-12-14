@@ -1,0 +1,124 @@
+﻿@model ML.Sucursal
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href=" https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<script src=" https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+<div class="text-center">
+    <h2>Sucursal</h2>
+    <h5>Lista de Sucursales</h5>
+</div>
+<hr />
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 30%;
+    }
+
+    .form-control {
+        width: 100%;
+    }
+</style>
+
+<a href="@Url.Action("Form","Sucursal")" class="btn btn-success">Agregar </a>
+<button id="loginBtn" class="btn btn-success">Iniciar Session</button>
+
+@if (Model.Sucursales.Count > 0)
+{
+    <table class="table table-bordered">
+        <thead>
+            <!-- On rows -->
+            <tr class="bg-warning">
+                <th>Editar</th>
+                <th>IdSucursal</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Telefono</th>
+                <th>Eliminar</th>
+                <!-- On cells (`td` or `th`) -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ML.Sucursal sucursal in Model.Sucursales)
+            {
+                <tr>
+                    <td><a class="btn btn-warning" href="@Url.Action("Form", "Sucursal", new { IdSucursal = sucursal.IdSucursal })"><i class="fa-solid fa-pencil fa-bounce" style="color: #332774;"></i></a></td>
+                    <td>@sucursal.IdSucursal</td>
+                    <td>@sucursal.Nombre</td>
+                    <td>@sucursal.Direccion</td>
+                    <td>@sucursal.Telefono</td>
+                    <td><a class="btn btn-danger" href="@Url.Action("Delete", "Sucursal", new { IdSucursal = sucursal.IdSucursal })" onclick="return confirm('Estas seguro de que quieres eliminar este registro');"> <i class="fa-solid fa-trash fa-beat" style="color: black;"></i></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        No existen registros en la tabla :(
+    </div>
+}
+
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Iniciar Session</h2>
+        @using (Html.BeginForm("Logout", "Sucursal", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label for="username">Nombre de usuario</label>
+                <input type="text" class="form-control" id="Email" name="Email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts{
+    <script>
+        var modal = document.getElementById('loginModal');
+        var btn = document.getElementById('loginBtn');
+        var span = document.getElementsByClassName('close')[0];
+
+        btn.onclick = function () {
+            modal.style.display = 'block';
+        }
+
+        span.onclick = function () {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+}
